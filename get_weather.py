@@ -3,19 +3,19 @@ import numpy as np
 import pandas as pd
 import requests
 import datetime
+import config
 
 # today
 today = str(datetime.datetime.now().strftime("%Y%m%d"))
 
 # parameters
-key = 'fc197db221e7649af22e69473d62b681' # api key
 url = 'http://api.openweathermap.org/data/2.5/weather' # url
 
 # payload is dict of key and zipcode
 payload = {
-    'APPID':'fc197db221e7649af22e69473d62b681',
+    'APPID':config.key,
     'units':'imperial',
-    'zip':'73301'
+    'zip':''
           }
 
 # gather data for a list of zipcodes
@@ -51,7 +51,6 @@ for i in w:
     temp_max.append(i['main']['temp_max'])
     temp_min.append(i['main']['temp_min'])
     name.append(i['name'])
-    wind_deg.append(i['wind']['deg'])
     wind_speed.append(i['wind']['speed'])
 
 # make location dataframe
@@ -73,7 +72,6 @@ weather = pd.DataFrame(
         'temp':temp,
         'temp_max':temp_max,
         'temp_min':temp_min,
-        'wind_deg':wind_deg,
         'wind_speed':wind_speed,
         'id':loc_id,
         'dt':dt,
@@ -85,10 +83,13 @@ location.to_csv('/Users/centola/Dropbox/projects/weather/data/location_' + \
                columns = ['id','name','zip','lat','lon'],header=True, 
                index = False)
 
+print(f'Created backup of location data for {today}')
+
 # make weather csv
 weather.to_csv('/Users/centola/Dropbox/projects/weather/data/weather_' + \
                today+'.csv', \
                columns = ['id','dt','temp','temp_max',
-                          'temp_min','pressure','humidity',
-                          'wind_deg','wind_speed'],header=True, 
+                          'temp_min','pressure','humidity','wind_speed'],header=True, 
                index = False)
+
+print(f'Created backup of weather data for {today}')
