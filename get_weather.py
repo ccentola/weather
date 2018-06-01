@@ -19,7 +19,7 @@ payload = {
           }
 
 # gather data for a list of zipcodes
-cities = ['02115','73301','85054']
+cities = ['02115','73301','85054','10012','97035','98101',]
 w = []
 for c in cities:
     payload['zip'] = c
@@ -73,9 +73,13 @@ weather = pd.DataFrame(
         'temp_max':temp_max,
         'temp_min':temp_min,
         'wind_speed':wind_speed,
-        'id':loc_id,
+        'loc_id':loc_id,
         'dt':dt,
+        'date':today
     })
+
+# convert dt to human readable time
+weather['dt'] = pd.to_datetime(weather['dt'],unit='s')
 
 # make location csv
 location.to_csv('/Users/centola/Dropbox/projects/weather/data/location_' + \
@@ -88,8 +92,8 @@ print(f'Created backup of location data for {today}')
 # make weather csv
 weather.to_csv('/Users/centola/Dropbox/projects/weather/data/weather_' + \
                today+'.csv', \
-               columns = ['id','dt','temp','temp_max',
-                          'temp_min','pressure','humidity','wind_speed'],header=True, 
+               columns = ['date','loc_id','dt','temp','temp_max',
+               'temp_min','pressure','humidity','wind_speed'],header=True, 
                index = False)
 
 print(f'Created backup of weather data for {today}')
